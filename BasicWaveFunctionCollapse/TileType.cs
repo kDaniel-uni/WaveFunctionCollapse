@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BasicWaveFunctionCollapse
+﻿namespace BasicWaveFunctionCollapse
 {
     public class TileType
     {
@@ -24,6 +21,7 @@ namespace BasicWaveFunctionCollapse
             Right = right;
             Left = left;
         }
+
         public TileType Copy() {
             return new TileType(Value, Up, Down, Right, Left);
         }

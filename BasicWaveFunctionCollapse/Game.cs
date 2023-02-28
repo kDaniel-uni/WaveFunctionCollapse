@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BasicWaveFunctionCollapse
+﻿namespace BasicWaveFunctionCollapse
 {
     public class Game
     {
@@ -56,12 +53,12 @@ namespace BasicWaveFunctionCollapse
 
                 while (queue.Count > 0) {
                     Tile tile = queue.Dequeue();
-                    Dictionary<DirectionType, Tile> neighbors = _gameMap.GetNeighborTiles(tile.Position);
+                    Dictionary<Direction, Tile> neighbors = _gameMap.GetNeighborTiles(tile.Position);
 
-                    var collapsed = tile.State.Update(neighbors[DirectionType.Up].State, 
-                        neighbors[DirectionType.Down].State, 
-                        neighbors[DirectionType.Right].State,
-                        neighbors[DirectionType.Left].State);
+                    var collapsed = tile.State.Update(neighbors[Direction.Up].State, 
+                        neighbors[Direction.Down].State, 
+                        neighbors[Direction.Right].State,
+                        neighbors[Direction.Left].State);
 
                     if (collapsed)
                     {

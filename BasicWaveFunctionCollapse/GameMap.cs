@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BasicWaveFunctionCollapse
+﻿namespace BasicWaveFunctionCollapse
 {
     public class GameMap
     {
@@ -22,7 +19,7 @@ namespace BasicWaveFunctionCollapse
                 Tile[] states = new Tile[MapSize];
                 for (int j = 0; j < MapSize; j++)
                 {
-                    states[j] = new Tile(new Position(i,j), initState);
+                    states[j] = new Tile(new Position(i, j), initState.Copy());
                 }
                 Grid[i] = states;
             }
@@ -39,25 +36,25 @@ namespace BasicWaveFunctionCollapse
         // Get the neighbors that are inside the map
         // Usage of Dictionary to allow sparse storage of tiles and access to iterator
         // Fill the empty directions with empty states
-        public Dictionary<DirectionType, Tile> GetNeighborTiles(Position pos)
+        public Dictionary<Direction, Tile> GetNeighborTiles(Position pos)
         {
-            Dictionary<DirectionType, Tile> neighbors = new();
+            Dictionary<Direction, Tile> neighbors = new();
 
-            neighbors.Add(DirectionType.Up, pos.Y > 0 ? 
+            neighbors.Add(Direction.Up, pos.Y > 0 ? 
                 Grid[pos.Y - 1][pos.X] : 
-                new Tile(pos, State.NullState));
+                new Tile(pos, State.EmptyState));
 
-            neighbors.Add(DirectionType.Down, pos.Y < MapSize ? 
+            neighbors.Add(Direction.Down, pos.Y < MapSize - 1 ? 
                 Grid[pos.Y + 1][pos.X] : 
-                new Tile(pos, State.NullState));
+                new Tile(pos, State.EmptyState));
 
-            neighbors.Add(DirectionType.Left, pos.X > 0 ? 
+            neighbors.Add(Direction.Left, pos.X > 0 ? 
                 Grid[pos.Y][pos.X - 1] : 
-                new Tile(pos, State.NullState));
+                new Tile(pos, State.EmptyState));
 
-            neighbors.Add(DirectionType.Right, pos.X < MapSize ? 
+            neighbors.Add(Direction.Right, pos.X < MapSize - 1 ? 
                 Grid[pos.Y][pos.X + 1] : 
-                new Tile(pos, State.NullState));
+                new Tile(pos, State.EmptyState));
 
             return neighbors;
         }
