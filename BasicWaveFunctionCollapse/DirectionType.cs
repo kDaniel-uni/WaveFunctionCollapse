@@ -1,9 +1,10 @@
-﻿namespace BasicWaveFunctionCollapse;
-
-public enum DirectionType : ushort
+﻿namespace BasicWaveFunctionCollapse
 {
-    Up = 0,
-    Down = 1,
-    Left = 2,
-    Right = 3
+    public enum DirectionType : ushort
+    {
+        Up = 0,
+        Down = 1,
+        Left = 2,
+        Right = 3
+    }
 }
