@@ -33,7 +33,7 @@ namespace BasicWaveFunctionCollapse
                 Tile[] states = new Tile[MapSize];
                 for (int j = 0; j < MapSize; j++)
                 {
-                    states[j] = new Tile(new Position(i,j), InitState);
+                    states[j] = new Tile(new Position(i,j), InitState.Copy());
                 }
                 Grid[i] = states;
             }

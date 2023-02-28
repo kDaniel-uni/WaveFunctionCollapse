@@ -36,7 +36,7 @@ namespace BasicWaveFunctionCollapse
             // here we are assuming the superposed tiles were all possible to be according to the adjacent tiles.
             // wrong tiles should have been removed previously by and Update() call
             Collapsed = SuperposedTiles[new Random().Next(0, SuperposedTiles.Count)];
-            SuperposedTiles = new List<TileType>();
+            SuperposedTiles = new (){Collapsed};
 
             return Collapsed;
         }
