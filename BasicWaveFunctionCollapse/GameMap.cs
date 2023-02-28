@@ -7,59 +7,113 @@ namespace BasicWaveFunctionCollapse
     {
         public Tile[][] Grid;
         public int MapSize;
+        public List<Position> UncollapsedPositions;
+        public State InitState;
 
         public GameMap(State initState, int mapSize)
         {
+            InitState = initState;
             MapSize = mapSize;
             Grid = new Tile[MapSize][];
-            InitGrid(initState);
+            UncollapsedPositions = new();
+            for (int i = 0; i < MapSize; i++)
+            {
+                for (int j = 0; j < MapSize; j++)
+                {
+                    UncollapsedPositions.Add(new Position(i, j));
+                }
+            }
+            InitGrid();
         }
     
-        private void InitGrid(State initState)
+        private void InitGrid()
         {
             for (int i = 0; i < MapSize; i++)
             {
                 Tile[] states = new Tile[MapSize];
                 for (int j = 0; j < MapSize; j++)
                 {
-                    states[j] = new Tile(new Position(i,j), initState);
+                    states[j] = new Tile(new Position(i,j), InitState);
                 }
                 Grid[i] = states;
             }
         }
     
     
-        public Tile FindTileWithHighestEntropy()
+        public Position CollapseTileWithHighestEntropy()
         {
-            Position pos = new Position(new Random().Next(0, MapSize), new Random().Next(0, MapSize));
-            return Grid[pos.X][pos.Y];
+            int index = new Random().Next(0, UncollapsedPositions.Count);
+            Position pos = UncollapsedPositions[index];
+            UncollapsedPositions.RemoveAt(index);
+            Grid[pos.X][pos.Y].State.Collapse();
+
+            return pos;
         }
     
     
         // Get the neighbors that are inside the map
         // Usage of Dictionary to allow sparse storage of tiles and access to iterator
-        // Fill the empty directions with empty states
         public Dictionary<DirectionType, Tile> GetNeighborTiles(Position pos)
         {
             Dictionary<DirectionType, Tile> neighbors = new();
 
-            neighbors.Add(DirectionType.Up, pos.Y > 0 ? 
-                Grid[pos.Y - 1][pos.X] : 
-                new Tile(pos, State.NullState));
-
-            neighbors.Add(DirectionType.Down, pos.Y < MapSize ? 
-                Grid[pos.Y + 1][pos.X] : 
-                new Tile(pos, State.NullState));
-
-            neighbors.Add(DirectionType.Left, pos.X > 0 ? 
-                Grid[pos.Y][pos.X - 1] : 
-                new Tile(pos, State.NullState));
-
-            neighbors.Add(DirectionType.Right, pos.X < MapSize ? 
-                Grid[pos.Y][pos.X + 1] : 
-                new Tile(pos, State.NullState));
-
+            if (pos.Y > 0)
+            {
+                neighbors.Add(DirectionType.Up, Grid[pos.Y - 1][pos.X]);
+            }
+            
+            if (pos.Y < MapSize - 1)
+            {
+                neighbors.Add(DirectionType.Down, Grid[pos.Y + 1][pos.X]);
+            }
+            
+            if (pos.X > 0)
+            {
+                neighbors.Add(DirectionType.Left, Grid[pos.Y][pos.X - 1]);
+            }
+            
+            if (pos.X < MapSize - 1)
+            {
+                neighbors.Add(DirectionType.Right, Grid[pos.Y][pos.X + 1]);
+            }
+            
             return neighbors;
+        }
+
+        public void PrintGrid()
+        {
+            String boundLine = "-";
+                
+            for (int i = 0; i < MapSize; i++)
+            {
+                boundLine += "-";
+            }
+
+            boundLine += "-";
+            
+            Console.WriteLine(boundLine);
+            
+            for (int j = 0; j < MapSize; j++)
+            {
+                String line = "|";
+                
+                for (int i = 0; i < MapSize; i++)
+                {
+                    if (Grid[i][j].State.Collapsed == null)
+                    {
+                        line += "?";
+                        continue;
+                    }
+                    
+                    line += Grid[i][j].State.Collapsed.Value;
+                }
+
+                line += "|";
+                
+                Console.WriteLine(line);
+            }
+            
+            Console.WriteLine(boundLine);
         }
     }
 }

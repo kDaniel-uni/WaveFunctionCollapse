@@ -17,10 +17,8 @@ namespace BasicWaveFunctionCollapse
     }
     public class State
     {
-        public static State NullState = new(new());
         private List<TileType> SuperposedTiles { get; set; }
-        private TileType Collapsed = null;
-    
+        public TileType? Collapsed { get; private set; } = null;
         public State(List<TileType> superposedTiles)
         {
             SuperposedTiles = superposedTiles;
@@ -54,13 +52,31 @@ namespace BasicWaveFunctionCollapse
                   || !right.SuperposedTiles.Exists(t => t.Left.Contains(tile))
                   || !left.SuperposedTiles.Exists(t => t.Right.Contains(tile)));
 
-            if (SuperposedTiles.Count == 1)
+            if (SuperposedTiles.Count <= 1)
             {
                 Collapse();
                 return true;
             }
 
             return false;
+        }
+
+        // Update the current tile using only one direction
+        public void UpdateDir(DirectionType dir, State state)
+        {
+            if (Collapsed != null)
+            {
+                return;
+            }
+
+            SuperposedTiles.RemoveAll(tile => 
+                !state.SuperposedTiles.Exists(t => 
+                    t.OpposingTileTypes(dir).Contains(tile)));
+
+            if (SuperposedTiles.Count <= 1)
+            {
+                Collapse();
+            }
         }
 
         public bool IsCollapsed() {
